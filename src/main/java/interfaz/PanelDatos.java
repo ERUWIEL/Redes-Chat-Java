@@ -13,16 +13,17 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import componentes.PButton;
 import componentes.PTextField;
 
 
 public class PanelDatos extends JPanel {
 
     private List<PTextField> datos = new LinkedList<>();
+    private List<PButton> botones = new LinkedList<>();
 
     public PanelDatos(String titulo) {
         super(null);
-        datos.clear();
         JPanel pnlOptiones = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -62,14 +63,26 @@ public class PanelDatos extends JPanel {
         txtPuerto.setCampoNumerico();
         txtPuerto.setBounds(290, 190, 210, 30);
 
+        // boton cancelar
+        PButton btnCancelar = new PButton("cancelar");
+        btnCancelar.setBounds(200, 360, 100, 30);
+        // boton aceptar
+        PButton btnAceptar = new PButton("aceptar");
+        btnAceptar.setBounds(400, 360, 100, 30);
+
+
         datos.add(txtIP);
         datos.add(txtPuerto);
+        botones.add(btnCancelar);
+        botones.add(btnAceptar);
 
         add(lblTitulo);
         add(lblIP);
         add(txtIP);
         add(lblPuerto);
         add(txtPuerto);
+        add(btnCancelar);
+        add(btnAceptar);
         add(pnlOptiones);
     }
 
@@ -79,5 +92,13 @@ public class PanelDatos extends JPanel {
 
     public int getDatoPuerto(){
         return Integer.parseInt(datos.get(1).getText());
+    }
+
+    public PButton getBotonAceptar(){
+        return botones.get(1);
+
+    }
+    public PButton getBotonCancelar(){
+        return botones.get(0);
     }
 }

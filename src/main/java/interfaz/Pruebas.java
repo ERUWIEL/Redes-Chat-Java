@@ -88,17 +88,9 @@ public class Pruebas extends JFrame {
         pnlCentral.add(pnlOptiones);
         add(pnlCentral, BorderLayout.CENTER);
 
-        // boton cancelar
-        PButton btnCancelar = new PButton("cancelar");
-        btnCancelar.setBounds(200, 360, 100, 30);
-        // boton aceptar
-        PButton btnAceptar = new PButton("aceptar");
-        btnAceptar.setBounds(400, 360, 100, 30);
-
         // panel de recoleccion de datos de creacion
         PanelDatos pnlDatos = new PanelDatos("Informacion Del Servidor");
-        pnlDatos.add(btnCancelar);
-        pnlDatos.add(btnAceptar);
+
 
         // MouseListener del boton cliente
         btnCliente.addMouseListener(new MouseAdapter() {
@@ -124,7 +116,7 @@ public class Pruebas extends JFrame {
             }
         });
 
-        btnCancelar.addMouseListener(new MouseAdapter() {
+        pnlDatos.getBotonCancelar().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 operacion = null;
