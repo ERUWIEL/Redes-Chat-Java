@@ -23,6 +23,7 @@ public class Servidor implements Runnable{
             System.out.println("Corriendo Servidor TCP");
             while (true) {
                 Socket skCliente = skServidor.accept();
+                
                 System.out.println("Cliente conectado: " + skCliente.getInetAddress());
                 // crear un hilo dedicado a la gestion del usuario conectado
                 new Thread(() -> gestorCliente(skCliente)).start();
@@ -45,6 +46,8 @@ public class Servidor implements Runnable{
                 System.out.println("Mensaje recibido: " + message);
                 out.println("Servidor responde: " + message.toUpperCase());
             }
+
+
         } catch (IOException e) {
             System.err.println("Error con cliente: " + e.getMessage());
         } finally {
