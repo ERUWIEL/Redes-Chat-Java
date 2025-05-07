@@ -5,6 +5,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import componentes.PButton;
+import entidades.Cliente;
+import entidades.Servidor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,12 +27,16 @@ import java.awt.event.MouseEvent;
  */
 public class Pruebas extends JFrame {
     private String operacion;
-
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new Pruebas().setVisible(true);
+        //new Pruebas().setVisible(true);
+        
+        Servidor servidor = new Servidor(56002);
+        
+        
     }
 
     /**

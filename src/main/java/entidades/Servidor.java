@@ -1,55 +1,93 @@
-
 package entidades;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  * clase que representa un socket
+ *
  * @author erubiel
  */
-public class Servidor implements Runnable{
+public class Servidor {
+
+    private ServerSocket skServidorTCP;
+    private DatagramSocket skServidorUDP;
+    private InetAddress ipServidor;
+    //private Cliente admin;
+    private List<Socket> skClientes = new ArrayList<>(6);
+    private List<Cliente> clientes = new ArrayList<>(6);
+    
+
     /**
-     * Metodo que permite la concexion con un cliente
+     * Inicializa un objeto Servidor con un puerto mandado
+     *
+     * @param puerto
      */
-    @Override
-    public void run() {
-        try{
-            ServerSocket skServidor = new ServerSocket(1060);
+    public Servidor(int puerto) {
+        try {
+            this.skServidorTCP = new ServerSocket(puerto);
+            this.ipServidor = skServidorTCP.getInetAddress();
+            new Thread(() -> conectarClienteTCP()).start();
+            //new Thread(() -> conectarClienteUDP()).start();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "ERROR EN EL PUERTO", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    
+    /**
+     * Metodo que permite la concexion TCP con un cliente para enviar y recibir
+     * mensajes
+     */
+    private void conectarClienteTCP() {
+        
+        try {
             System.out.println("Corriendo Servidor TCP");
+            Cliente cliente = new Cliente("localhost", "contraseña");
             while (true) {
-                Socket skCliente = skServidor.accept();
                 
+                cliente.asignarServidor(ipServidor, skServidorTCP.getLocalPort());
+                clientes.add(cliente);
+                Socket skCliente = skServidorTCP.accept();
                 System.out.println("Cliente conectado: " + skCliente.getInetAddress());
+                skClientes.add(skCliente);
+                
                 // crear un hilo dedicado a la gestion del usuario conectado
                 new Thread(() -> gestorCliente(skCliente)).start();
             }
-        }catch(IOException ex){
-            System.out.println(ex.getMessage());
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "ERROR AL CONECTAR AL CLIENTE", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
         }
     }
     
     /**
      * Metodo que permite gestionar la escucha a clientes
-     * @param skCliente 
+     *
+     * @param skCliente
      */
-    private void gestorCliente(Socket skCliente){
-        try{
+    private void gestorCliente(Socket skCliente) {
+        try {
             BufferedReader in = new BufferedReader(new InputStreamReader(skCliente.getInputStream()));
-            PrintWriter out = new PrintWriter(skCliente.getOutputStream(), true); 
             String message;
             while ((message = in.readLine()) != null) {
-                System.out.println("Mensaje recibido: " + message);
-                out.println("Servidor responde: " + message.toUpperCase());
+                // logica de mandar el mensje a los demas clientes
+                for(Socket x : skClientes){
+                    PrintWriter out = new PrintWriter(x.getOutputStream(), true);
+                    out.println(message.toUpperCase());
+                }
             }
-
-
-        } catch (IOException e) {
-            System.err.println("Error con cliente: " + e.getMessage());
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "ERROR AL GESTIONAR CLIENTE", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 skCliente.close();
@@ -58,4 +96,30 @@ public class Servidor implements Runnable{
             }
         }
     }
+
+
+
+    /**
+     * Conectar a un cliente al servidor mediante una conexion UDP para envio de
+     * paquete
+     */
+    private void conectarClienteUDP() {
+        try {
+            skServidorUDP = new DatagramSocket();
+            byte[] buffer = new byte[1024];
+
+            System.out.println("Servidor UDP esperando...");
+
+            while (true) {
+                DatagramPacket paqueteRecibido = new DatagramPacket(buffer, buffer.length);
+                skServidorUDP.receive(paqueteRecibido);
+                DatagramPacket paqueteRespuesta = new DatagramPacket(
+                        paqueteRecibido.getData(), paqueteRecibido.getData().length,
+                        paqueteRecibido.getAddress(), paqueteRecibido.getPort());
+                skServidorUDP.send(paqueteRespuesta);
+            }
+        } catch (IOException ex) {
+        }
+    }
+
 }
