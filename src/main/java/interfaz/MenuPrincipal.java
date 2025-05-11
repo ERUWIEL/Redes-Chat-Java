@@ -16,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 //import java.util.Scanner;
 import componentes.PButton;
+import componentes.PMenuCliente;
 import componentes.PMenuServidor;
 //import entidades.Encriptador;
 
@@ -27,7 +28,7 @@ import java.io.IOException;
  * 
  * @author erubiel
  */
-public class Pruebas extends JFrame {
+public class MenuPrincipal extends JFrame {
     //private String operacion;
     private JPanel pnlContenido;
     private PButton btnCrear;
@@ -53,13 +54,13 @@ public class Pruebas extends JFrame {
         bob.decifrar(); // bob recibe el mensaje cifrado y decifra con la clave establecida
         System.out.println("Mensaje decifrado por Bob: " + bob.getMensaje());
         */
-        new Pruebas().setVisible(true); 
+        new MenuPrincipal().setVisible(true); 
     }
 
     /**
      * Metodo constructor de la ventana
      */
-    public Pruebas() {
+    public MenuPrincipal() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 600);
         setResizable(false);
@@ -110,7 +111,7 @@ public class Pruebas extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 pnlContenido.setVisible(false);
-                pnlCentro.add(new PMenuServidor(), BorderLayout.CENTER);
+                pnlCentro.add(new PMenuServidor(pnlContenido), BorderLayout.CENTER);
                 pnlCentro.revalidate();
                 pnlCentro.repaint();
             }
@@ -121,10 +122,10 @@ public class Pruebas extends JFrame {
         btnUnirse.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("Botón Unirse clickeado");
-                //PanelDatos panelDatos = new PanelDatos();
-                //panelDatos.setVisible(true);
-                //setVisible(false);
+                pnlContenido.setVisible(false);
+                pnlCentro.add(new PMenuCliente(pnlContenido), BorderLayout.CENTER);
+                pnlCentro.revalidate();
+                pnlCentro.repaint();
             }
         });
     }

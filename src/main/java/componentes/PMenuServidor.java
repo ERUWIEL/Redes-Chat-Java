@@ -6,6 +6,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+
 public class PMenuServidor extends JPanel {
 
     private PButton btnMas;
@@ -14,9 +15,11 @@ public class PMenuServidor extends JPanel {
     private PButton btnRegresar;
     private PTextField txtCapacidad;
     private int capacidad = 0;
+    private JPanel pnlPadre;
 
-    public PMenuServidor() {
+    public PMenuServidor(JPanel pnlPadre) {
         super(null);
+        this.pnlPadre = pnlPadre;
         setBackground(new Color(84, 0, 81));
 
         Font font = new Font("Oswald", Font.PLAIN, 20);
@@ -127,12 +130,12 @@ public class PMenuServidor extends JPanel {
         });
     }
     
-    private void runBtnRegresar() {
+    private void runBtnRegresar(){
         btnRegresar.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                // TODO add your handling code here:
-                System.out.println("Botón Regresar clickeado");
+                setVisible(false);
+                pnlPadre.setVisible(true);
             }
         });
     }
