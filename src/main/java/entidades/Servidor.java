@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+//import java.net.DatagramPacket;
+//import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 public class Servidor {
 
     private ServerSocket skServidorTCP;
-    private DatagramSocket skServidorUDP;
+    //private DatagramSocket skServidorUDP;
     private InetAddress ipServidor;
     //private Cliente admin;
     private List<Socket> skClientes = new ArrayList<>(6);
@@ -56,7 +56,7 @@ public class Servidor {
             Cliente cliente = new Cliente("localhost", "contraseña");
             while (true) {
                 
-                cliente.asignarServidor(ipServidor, skServidorTCP.getLocalPort());
+                cliente.asignarServidor(ipServidor.getHostAddress(), skServidorTCP.getLocalPort());
                 clientes.add(cliente);
                 Socket skCliente = skServidorTCP.accept();
                 System.out.println("Cliente conectado: " + skCliente.getInetAddress());
@@ -98,11 +98,7 @@ public class Servidor {
     }
 
 
-
-    /**
-     * Conectar a un cliente al servidor mediante una conexion UDP para envio de
-     * paquete
-     */
+    /**  Solo comente lo que un no se ha implementado
     private void conectarClienteUDP() {
         try {
             skServidorUDP = new DatagramSocket();
@@ -121,5 +117,5 @@ public class Servidor {
         } catch (IOException ex) {
         }
     }
-
+    */
 }

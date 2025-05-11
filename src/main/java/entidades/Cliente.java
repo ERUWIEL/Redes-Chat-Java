@@ -25,7 +25,7 @@ public class Cliente implements Runnable{
     private InetAddress direccionServidor;
     private InetAddress ip;
     private int puertoTCP;
-    private int puertoUDP;
+    //private int puertoUDP;
 
     public Cliente(String nombre, String contraseña) {
         this.nombre = nombre;
@@ -43,13 +43,18 @@ public class Cliente implements Runnable{
         }).start();
     }
     
-    public void asignarServidor(InetAddress direccionServidor, int puertoTCP) throws IOException {
-        this.direccionServidor = direccionServidor;
-        this.puertoTCP = puertoTCP;
-        this.puertoUDP = puertoTCP + 1;
+    public void asignarServidor(String direccionServidor, int puertoTCP) throws IOException {
+        try{
+            this.direccionServidor = InetAddress.getByName(direccionServidor);
+            this.puertoTCP = puertoTCP;
+        }catch(IOException ex){
+
+        }
+        //this.puertoUDP = puertoTCP + 1;
     }
 
     public void gestorTCP() throws IOException {
+        if(this.direccionServidor == null){return;}
         try {
             Socket socket = new Socket(direccionServidor, puertoTCP);
             this.ip = socket.getLocalAddress();
@@ -76,6 +81,7 @@ public class Cliente implements Runnable{
                 }
                 out.println(mensaje);
             }
+            scanner.close();
             in.close();
             out.close();
             socket.close();
@@ -100,7 +106,7 @@ public class Cliente implements Runnable{
         byte[] respuestaBytes = respuesta.getBytes();
         DatagramPacket paqueteEscribiendo = new DatagramPacket(respuestaBytes, respuestaBytes.length);
         socketUDP.send(paqueteEscribiendo);
-
+        socketUDP.close();
     }
 
     //getters

@@ -3,22 +3,23 @@ package interfaz;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 
-import componentes.PButton;
-import entidades.Cliente;
-import entidades.Servidor;
-
+//import entidades.Cliente;
+//import entidades.Servidor;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.geom.RoundRectangle2D;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+//import java.util.Scanner;
+import componentes.PButton;
+import componentes.PanelDatos;
+
+import java.io.IOException;
+
 
 /**
  * clase que representa una ventana principal de un chat
@@ -26,16 +27,15 @@ import java.awt.event.MouseEvent;
  * @author erubiel
  */
 public class Pruebas extends JFrame {
-    private String operacion;
-    
+    //private String operacion;
+    private JPanel pnlContenido;
+    private PButton btnCrear;
+    private PButton btnUnirse;
+    private JPanel pnlCentro;
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        //new Pruebas().setVisible(true);
-        
-        Servidor servidor = new Servidor(56002);
-        
+    public static void main(String[] args) throws IOException{
         
     }
 
@@ -47,6 +47,7 @@ public class Pruebas extends JFrame {
         setSize(800, 600);
         setResizable(false);
         setTitle("TCPvChat");
+        setIconImage(new ImageIcon("src/main/resources/chat-icono.png").getImage());
         setLayout(new BorderLayout());
         initComponents();
     }
@@ -55,81 +56,56 @@ public class Pruebas extends JFrame {
      * Metodo que inicializa los componentes visuales de la ventana
      */
     private void initComponents() {
-        JPanel pnlCentral = new JPanel();
-        pnlCentral.setLayout(null); // AbsoluteLayout
+        // panel norte
+        JPanel pnlNorte = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
+        pnlNorte.setBackground(new Color(33, 1, 46));
+        JLabel titulo = new JLabel("TCPvCHAT");
+        titulo.setForeground(Color.WHITE);
+        titulo.setFont(new Font("Oswald", Font.PLAIN, 45));
+        pnlNorte.add(titulo);
+        pnlNorte.setPreferredSize(new Dimension(getWidth(), 90));
+        add(pnlNorte, BorderLayout.NORTH);
 
-        // panel redondo personalizado usando clases internas anonimas
-        JPanel pnlOptiones = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                // Define la forma redondeada
-                Shape clip = new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20);
-                g2d.setClip(clip);
-                // Dibuja el fondo
-                g2d.setColor(new Color(0, 1, 12));
-                g2d.fill(clip);
-                super.paintComponent(g);
-            }
-        };
-        pnlOptiones.setOpaque(false);
-        pnlOptiones.setBounds(230, 100, 300, 300);
-        // Label del titulo
-        JLabel lblTitulo = new JLabel("CHAT TCP/IP");
-        lblTitulo.setFont(new Font("Calibri", Font.BOLD, 19));
-        lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setBounds(325, 120, 100, 20);
-        // boton cliente
-        PButton btnServidor = new PButton("Crear Servidor");
-        btnServidor.setBounds(230, 180, 300, 30);
-        // boton servidor
-        PButton btnCliente = new PButton("Unirse a Servidor");
-        btnCliente.setBounds(230, 240, 300, 30);
+        // panel centro
+        pnlCentro = new JPanel();
+        pnlCentro.setBackground(new Color(84, 0, 81));
 
-        // agregaciones al panel principal que implementa un AbsoluteLayout
-        pnlCentral.add(lblTitulo);
-        pnlCentral.add(btnServidor);
-        pnlCentral.add(btnCliente);
-        pnlCentral.add(pnlOptiones);
-        add(pnlCentral, BorderLayout.CENTER);
+        pnlContenido = new JPanel();
+        pnlContenido.setLayout(null);
+        
+        // botones
+        btnCrear = new PButton("src/main/resources/server-icono.png", "CREAR");
+        btnUnirse = new PButton("src/main/resources/unirse-icono.png", "UNIRSE");
+        btnCrear.setBounds(150, 150, 350, 350);
+        btnUnirse.setBounds(700, 150, 350, 350);
+        pnlContenido.add(btnCrear);
+        pnlContenido.add(btnUnirse);
+        pnlCentro.add(pnlContenido);
 
-        // panel de recoleccion de datos de creacion
-        PanelDatos pnlDatos = new PanelDatos("Informacion Del Servidor");
+        add(pnlCentro, BorderLayout.CENTER);
+        runBtnCrear();
+        runBtnUnirse();
+    }
 
-
-        // MouseListener del boton cliente
-        btnCliente.addMouseListener(new MouseAdapter() {
+    private void runBtnCrear() {
+        btnCrear.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                operacion = "cliente";
-                remove(pnlCentral);
-                add(pnlDatos, BorderLayout.CENTER);
+                remove(pnlContenido);
+                pnlContenido = new PanelDatos();
+                pnlContenido.setOpaque(true);
+                add(pnlContenido, BorderLayout.CENTER);
                 revalidate();
                 repaint();
             }
         });
+    }
 
-        // MouseListener del boton servidor
-        btnServidor.addMouseListener(new MouseAdapter() {
+    private void runBtnUnirse() {
+        btnUnirse.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                operacion = "servidor";
-                remove(pnlCentral);
-                add(pnlDatos, BorderLayout.CENTER);
-                revalidate();
-                repaint();
-            }
-        });
 
-        pnlDatos.getBotonCancelar().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                operacion = null;
-                remove(pnlDatos);
-                add(pnlCentral, BorderLayout.CENTER);
-                revalidate();
-                repaint();
             }
         });
     }
