@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  *
  * @author angel
  */
-public class Cliente implements Runnable{
+public class Cliente implements Runnable {
 
     private String nombre;
     private String contraseña;
@@ -33,20 +33,28 @@ public class Cliente implements Runnable{
     }
 
     @Override
-    public void run(){
+    public void run() {
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException ex) {
+            System.out.println("Error");
+        }
         new Thread(() -> {
             try {
+
                 gestorTCP();
             } catch (IOException ex) {
-                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error");
             }
         }).start();
     }
-    
-    public void asignarServidor(InetAddress direccionServidor, int puertoTCP) throws IOException {
+
+    public void asignarServidor(InetAddress direccionServidor, int puertoTCP, Cliente cliente) throws IOException {
         this.direccionServidor = direccionServidor;
         this.puertoTCP = puertoTCP;
-        this.puertoUDP = puertoTCP + 1;
+        //this.puertoUDP = puertoTCP + 1;
+        
+        new Thread(cliente).start();
     }
 
     public void gestorTCP() throws IOException {
@@ -70,8 +78,8 @@ public class Cliente implements Runnable{
             Scanner scanner = new Scanner(System.in);
             while (true) {
                 String mensaje = scanner.nextLine();
-                mensaje = this.getNombre()+ ": " + mensaje;
-                if (mensaje.equalsIgnoreCase("salir")) {
+                mensaje = this.getNombre() + ": " + mensaje;
+                if (mensaje.equalsIgnoreCase("/salir")) {
                     break;
                 }
                 out.println(mensaje);

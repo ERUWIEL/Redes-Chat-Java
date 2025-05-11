@@ -23,53 +23,55 @@ public class Servidor {
     private ServerSocket skServidorTCP;
     private DatagramSocket skServidorUDP;
     private InetAddress ipServidor;
-    //private Cliente admin;
+
     private List<Socket> skClientes = new ArrayList<>(6);
     private List<Cliente> clientes = new ArrayList<>(6);
-    
 
     /**
      * Inicializa un objeto Servidor con un puerto mandado
      *
+     * @param ipServidor
      * @param puerto
      */
-    public Servidor(int puerto) {
+    public Servidor(InetAddress ipServidor, int puerto, Cliente cliente) {
         try {
+            
             this.skServidorTCP = new ServerSocket(puerto);
-            this.ipServidor = skServidorTCP.getInetAddress();
-            new Thread(() -> conectarClienteTCP()).start();
+            this.ipServidor = ipServidor;
+
+            new Thread(() -> conectarClienteTCP(cliente)).start();
             //new Thread(() -> conectarClienteUDP()).start();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "ERROR EN EL PUERTO", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    
     /**
      * Metodo que permite la concexion TCP con un cliente para enviar y recibir
      * mensajes
      */
-    private void conectarClienteTCP() {
-        
+    private void conectarClienteTCP(Cliente cliente) {
+
         try {
             System.out.println("Corriendo Servidor TCP");
-            Cliente cliente = new Cliente("localhost", "contraseña");
+
             while (true) {
-                
-                cliente.asignarServidor(ipServidor, skServidorTCP.getLocalPort());
-                clientes.add(cliente);
-                Socket skCliente = skServidorTCP.accept();
-                System.out.println("Cliente conectado: " + skCliente.getInetAddress());
-                skClientes.add(skCliente);
-                
-                // crear un hilo dedicado a la gestion del usuario conectado
-                new Thread(() -> gestorCliente(skCliente)).start();
+                if (!clienteExiste(cliente)) {
+                    cliente.asignarServidor(ipServidor, skServidorTCP.getLocalPort(), cliente);
+                    clientes.add(cliente);
+                    Socket skCliente = skServidorTCP.accept();
+                    System.out.println("Cliente conectado: " + skCliente.getInetAddress());
+                    skClientes.add(skCliente);
+
+                    // crear un hilo dedicado a la gestion del usuario conectado
+                    new Thread(() -> gestorCliente(skCliente)).start();
+                }
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "ERROR AL CONECTAR AL CLIENTE", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     /**
      * Metodo que permite gestionar la escucha a clientes
      *
@@ -81,7 +83,7 @@ public class Servidor {
             String message;
             while ((message = in.readLine()) != null) {
                 // logica de mandar el mensje a los demas clientes
-                for(Socket x : skClientes){
+                for (Socket x : skClientes) {
                     PrintWriter out = new PrintWriter(x.getOutputStream(), true);
                     out.println(message.toUpperCase());
                 }
@@ -96,8 +98,6 @@ public class Servidor {
             }
         }
     }
-
-
 
     /**
      * Conectar a un cliente al servidor mediante una conexion UDP para envio de
@@ -122,4 +122,18 @@ public class Servidor {
         }
     }
 
+    public boolean clienteExiste(Cliente cliente) {
+        boolean existe = false;
+
+        for (Cliente c : clientes) {
+            if (c.equals(cliente)) {
+                existe = true;
+            }
+        }
+        return existe;
+    }
+    
+    public InetAddress getIp(){
+        return ipServidor;
+    }
 }
