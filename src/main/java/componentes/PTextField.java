@@ -18,9 +18,10 @@ public class PTextField extends JTextField {
 
     public PTextField() {
         super();
-        setFont(new Font("Calibri", Font.BOLD, 18));
+        setFont(new Font("Oswald", Font.BOLD, 18));
         setForeground(new Color(255, 255, 255));
-        setBackground(new Color(23, 2, 99));
+        setBackground(new Color(137, 0, 127));
+        setHorizontalAlignment(JTextField.CENTER);
         setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
 
         // agrega animaciones
@@ -33,7 +34,7 @@ public class PTextField extends JTextField {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                setBackground(new Color(23, 2, 99));
+                setBackground(new Color(137, 0, 127));
                 setForeground(new Color(255, 255, 255));
             }
         });

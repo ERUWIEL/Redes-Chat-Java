@@ -16,7 +16,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 //import java.util.Scanner;
 import componentes.PButton;
-import componentes.PanelDatos;
+import componentes.PMenuServidor;
+//import entidades.Encriptador;
 
 import java.io.IOException;
 
@@ -32,11 +33,27 @@ public class Pruebas extends JFrame {
     private PButton btnCrear;
     private PButton btnUnirse;
     private JPanel pnlCentro;
+
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException{
-        System.out.println("hello world");
+        /*
+        Encriptador alice = new Encriptador(); //alice manda P, G y A
+        Encriptador bob = new Encriptador(alice.getParam()); //bob recibe P, G y A
+        alice.finalizar(bob.getParam()); //alice recibe B
+        System.out.println("Claves Compartidas");
+        System.out.println("Clave: " + alice.s());
+        alice.setMensaje("HOLA BOB COMO ESTAS ESTE ES MI MENSAJE ENCRIPTADO 123456789@#$%$&$#$");
+        alice.cifrar();
+        String mensaje = alice.getMensaje(); //alice manda el mensaje cifrado
+        System.out.println("Mensaje Recibido por Bob: " + mensaje);
+        bob.setMensaje(mensaje);
+        bob.decifrar(); // bob recibe el mensaje cifrado y decifra con la clave establecida
+        System.out.println("Mensaje decifrado por Bob: " + bob.getMensaje());
+        */
+        new Pruebas().setVisible(true); 
     }
 
     /**
@@ -68,19 +85,20 @@ public class Pruebas extends JFrame {
 
         // panel centro
         pnlCentro = new JPanel();
-        pnlCentro.setBackground(new Color(84, 0, 81));
+        pnlCentro.setLayout(new BorderLayout());
 
         pnlContenido = new JPanel();
+        pnlContenido.setBackground(new Color(84, 0, 81));
         pnlContenido.setLayout(null);
-        
+
         // botones
         btnCrear = new PButton("src/main/resources/server-icono.png", "CREAR");
         btnUnirse = new PButton("src/main/resources/unirse-icono.png", "UNIRSE");
-        btnCrear.setBounds(150, 150, 350, 350);
-        btnUnirse.setBounds(700, 150, 350, 350);
+        btnCrear.setBounds(120, 120, 250, 250); // x, y, width, height
+        btnUnirse.setBounds(420, 120, 250, 250); // Adjust size and position
         pnlContenido.add(btnCrear);
         pnlContenido.add(btnUnirse);
-        pnlCentro.add(pnlContenido);
+        pnlCentro.add(pnlContenido, BorderLayout.CENTER);
 
         add(pnlCentro, BorderLayout.CENTER);
         runBtnCrear();
@@ -91,12 +109,10 @@ public class Pruebas extends JFrame {
         btnCrear.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                remove(pnlContenido);
-                pnlContenido = new PanelDatos();
-                pnlContenido.setOpaque(true);
-                add(pnlContenido, BorderLayout.CENTER);
-                revalidate();
-                repaint();
+                pnlContenido.setVisible(false);
+                pnlCentro.add(new PMenuServidor(), BorderLayout.CENTER);
+                pnlCentro.revalidate();
+                pnlCentro.repaint();
             }
         });
     }
@@ -105,7 +121,10 @@ public class Pruebas extends JFrame {
         btnUnirse.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                System.out.println("Botón Unirse clickeado");
+                //PanelDatos panelDatos = new PanelDatos();
+                //panelDatos.setVisible(true);
+                //setVisible(false);
             }
         });
     }
