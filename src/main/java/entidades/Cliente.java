@@ -37,7 +37,7 @@ public class Cliente implements Runnable {
     @Override
     public void run() {
         try {
-            Thread.sleep(300);
+            Thread.sleep(1000);
         } catch (InterruptedException ex) {
             System.out.println("Error");
         }
@@ -117,11 +117,7 @@ public class Cliente implements Runnable {
     public String getNombre() {
         return nombre;
     }
-
-    public String getContraeña() {
-        return contraseña;
-    }
-
+    
     public InetAddress getIp() {
         return ip;
     }
@@ -135,8 +131,5 @@ public class Cliente implements Runnable {
         this.contraseña = contraeña;
     }
 
-    public void setIp(InetAddress ip) {
-        this.ip = ip;
-    }
 
 }

@@ -35,17 +35,17 @@ public class Servidor {
      * @param ipServidor
      * @param puerto
      */
-    public Servidor(int puerto, Cliente cliente) {
+    public Servidor(int puerto) {
         try {
             
-            this.skServidorTCP = new ServerSocket(puerto, 50, InetAddress.getByName("0.0.0.0"));
+            this.skServidorTCP = new ServerSocket(puerto, 5, InetAddress.getByName("0.0.0.0"));
             this.ipServidor = obtenerIpPrivada();
 
 
             System.out.println(ipServidor.getHostAddress());
 
 
-            new Thread(() -> conectarClienteTCP(cliente)).start();
+            new Thread(() -> conectarClienteTCP()).start();
             //new Thread(() -> conectarClienteUDP()).start();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "ERROR EN EL PUERTO", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
@@ -56,29 +56,21 @@ public class Servidor {
      * Metodo que permite la concexion TCP con un cliente para enviar y recibir
      * mensajes
      */
-    private void conectarClienteTCP(Cliente cliente) {
+private void conectarClienteTCP() {
+    try {
+        System.out.println("Corriendo Servidor TCP");
+        while (true) {
+            Socket skCliente = skServidorTCP.accept();
+            System.out.println("Cliente conectado: " + skCliente.getInetAddress());
+            skClientes.add(skCliente);
 
-        try {
-            System.out.println("Corriendo Servidor TCP");
-            cliente.asignarServidor(ipServidor, skServidorTCP.getLocalPort());
-
-            
-
-            clientes.add(cliente);
-            while (true) {
-                    
-
-                    Socket skCliente = skServidorTCP.accept();
-                    System.out.println("Cliente conectado: " + skCliente.getInetAddress());
-                    skClientes.add(skCliente);
-
-                    // crear un hilo dedicado a la gestion del usuario conectado
-                    new Thread(() -> gestorCliente(skCliente)).start();
-            }
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "ERROR AL CONECTAR AL CLIENTE", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+            // Hilo para manejar la conexión con este cliente
+            new Thread(() -> gestorCliente(skCliente)).start();
         }
+    } catch (IOException ex) {
+        JOptionPane.showMessageDialog(null, "ERROR AL CONECTAR AL CLIENTE", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
     }
+}
 
     /**
      * Metodo que permite gestionar la escucha a clientes
