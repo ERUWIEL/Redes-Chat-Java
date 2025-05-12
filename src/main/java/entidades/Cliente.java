@@ -18,14 +18,20 @@ import javax.swing.JOptionPane;
  *
  * @author angel
  */
-public class Cliente implements Runnable{
+public class Cliente implements Runnable {
 
     private String nombre;
     private String contraseña;
     private InetAddress direccionServidor;
     private InetAddress ip;
     private int puertoTCP;
+<<<<<<< HEAD
     //private int puertoUDP;
+=======
+    private int puertoUDP;
+    private static final Scanner scanner = new Scanner(System.in);
+
+>>>>>>> 88f5358995b4cbba737eb02c2ac6df058ce88b08
 
     public Cliente(String nombre, String contraseña) {
         this.nombre = nombre;
@@ -33,15 +39,22 @@ public class Cliente implements Runnable{
     }
 
     @Override
-    public void run(){
+    public void run() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            System.out.println("Error");
+        }
         new Thread(() -> {
             try {
+
                 gestorTCP();
             } catch (IOException ex) {
-                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error");
             }
         }).start();
     }
+<<<<<<< HEAD
     
     public void asignarServidor(String direccionServidor, int puertoTCP) throws IOException {
         try{
@@ -51,6 +64,15 @@ public class Cliente implements Runnable{
 
         }
         //this.puertoUDP = puertoTCP + 1;
+=======
+
+    public void asignarServidor(InetAddress direccionServidor, int puertoTCP) throws IOException {
+        this.direccionServidor = direccionServidor;
+        this.puertoTCP = puertoTCP;
+        //this.puertoUDP = puertoTCP + 1;
+        
+        new Thread(this).start();
+>>>>>>> 88f5358995b4cbba737eb02c2ac6df058ce88b08
     }
 
     public void gestorTCP() throws IOException {
@@ -72,11 +94,11 @@ public class Cliente implements Runnable{
             }).start();
 
             // Hilo principal para enviar mensajes
-            Scanner scanner = new Scanner(System.in);
+            
             while (true) {
                 String mensaje = scanner.nextLine();
-                mensaje = this.getNombre()+ ": " + mensaje;
-                if (mensaje.equalsIgnoreCase("salir")) {
+                mensaje = this.getNombre() + ": " + mensaje;
+                if (mensaje.equalsIgnoreCase("/salir")) {
                     break;
                 }
                 out.println(mensaje);
@@ -113,11 +135,7 @@ public class Cliente implements Runnable{
     public String getNombre() {
         return nombre;
     }
-
-    public String getContraeña() {
-        return contraseña;
-    }
-
+    
     public InetAddress getIp() {
         return ip;
     }
@@ -131,8 +149,5 @@ public class Cliente implements Runnable{
         this.contraseña = contraeña;
     }
 
-    public void setIp(InetAddress ip) {
-        this.ip = ip;
-    }
 
 }
