@@ -25,13 +25,9 @@ public class Cliente implements Runnable {
     private InetAddress direccionServidor;
     private InetAddress ip;
     private int puertoTCP;
-<<<<<<< HEAD
-    //private int puertoUDP;
-=======
     private int puertoUDP;
     private static final Scanner scanner = new Scanner(System.in);
 
->>>>>>> 88f5358995b4cbba737eb02c2ac6df058ce88b08
 
     public Cliente(String nombre, String contraseña) {
         this.nombre = nombre;
@@ -54,17 +50,6 @@ public class Cliente implements Runnable {
             }
         }).start();
     }
-<<<<<<< HEAD
-    
-    public void asignarServidor(String direccionServidor, int puertoTCP) throws IOException {
-        try{
-            this.direccionServidor = InetAddress.getByName(direccionServidor);
-            this.puertoTCP = puertoTCP;
-        }catch(IOException ex){
-
-        }
-        //this.puertoUDP = puertoTCP + 1;
-=======
 
     public void asignarServidor(InetAddress direccionServidor, int puertoTCP) throws IOException {
         this.direccionServidor = direccionServidor;
@@ -72,7 +57,6 @@ public class Cliente implements Runnable {
         //this.puertoUDP = puertoTCP + 1;
         
         new Thread(this).start();
->>>>>>> 88f5358995b4cbba737eb02c2ac6df058ce88b08
     }
 
     public void gestorTCP() throws IOException {

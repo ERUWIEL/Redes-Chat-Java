@@ -55,8 +55,22 @@ public class MenuPrincipal extends JFrame {
         bob.decifrar(); // bob recibe el mensaje cifrado y decifra con la clave establecida
         System.out.println("Mensaje decifrado por Bob: " + bob.getMensaje());
         */
-        //new MenuPrincipal().setVisible(true);
-        new JChat("Chat de prueba").setVisible(true);
+        new MenuPrincipal().setVisible(true);
+        //new JChat("Chat de prueba").setVisible(true);
+        /**
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("1. Crear Servidor\n2. Unirse a Servidor");
+        int opt = scanner.nextInt();
+
+        if(opt == 1){
+            new Servidor(5000);
+        }else{
+            System.out.println("INGRESE LA IP DEL SERVIDOR");
+            Cliente cliente = new Cliente("angel", "123456");
+            String ip = scanner.next();
+            cliente.asignarServidor(InetAddress.getByName(ip),5000);
+        }
+        */
     }
 
     /**
