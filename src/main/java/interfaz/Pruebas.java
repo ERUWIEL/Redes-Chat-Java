@@ -34,7 +34,7 @@ public class Pruebas extends JFrame {
     public static void main(String[] args) {
         //new Pruebas().setVisible(true);
         
-        Servidor servidor = new Servidor(56002);
+        Servidor servidor = new Servidor(56002, new Cliente("Pepe", "Contraseña"));
         
         
     }
