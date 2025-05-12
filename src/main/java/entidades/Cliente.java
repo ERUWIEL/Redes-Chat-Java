@@ -26,6 +26,8 @@ public class Cliente implements Runnable {
     private InetAddress ip;
     private int puertoTCP;
     private int puertoUDP;
+    private static final Scanner scanner = new Scanner(System.in);
+
 
     public Cliente(String nombre, String contraseña) {
         this.nombre = nombre;
@@ -49,12 +51,12 @@ public class Cliente implements Runnable {
         }).start();
     }
 
-    public void asignarServidor(InetAddress direccionServidor, int puertoTCP, Cliente cliente) throws IOException {
+    public void asignarServidor(InetAddress direccionServidor, int puertoTCP) throws IOException {
         this.direccionServidor = direccionServidor;
         this.puertoTCP = puertoTCP;
         //this.puertoUDP = puertoTCP + 1;
         
-        new Thread(cliente).start();
+        new Thread(this).start();
     }
 
     public void gestorTCP() throws IOException {
@@ -75,7 +77,7 @@ public class Cliente implements Runnable {
             }).start();
 
             // Hilo principal para enviar mensajes
-            Scanner scanner = new Scanner(System.in);
+            
             while (true) {
                 String mensaje = scanner.nextLine();
                 mensaje = this.getNombre() + ": " + mensaje;

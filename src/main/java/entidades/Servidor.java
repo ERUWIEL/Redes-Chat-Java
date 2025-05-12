@@ -9,7 +9,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -37,7 +39,11 @@ public class Servidor {
         try {
             
             this.skServidorTCP = new ServerSocket(puerto, 50, InetAddress.getByName("0.0.0.0"));
-            this.ipServidor = InetAddress.getLocalHost();
+            this.ipServidor = obtenerIpPrivada();
+
+
+            System.out.println(ipServidor.getHostAddress());
+
 
             new Thread(() -> conectarClienteTCP(cliente)).start();
             //new Thread(() -> conectarClienteUDP()).start();
@@ -54,10 +60,14 @@ public class Servidor {
 
         try {
             System.out.println("Corriendo Servidor TCP");
-            cliente.asignarServidor(ipServidor, skServidorTCP.getLocalPort(), cliente);
+            cliente.asignarServidor(ipServidor, skServidorTCP.getLocalPort());
+
+            
+
+            clientes.add(cliente);
             while (true) {
                     
-                    clientes.add(cliente);
+
                     Socket skCliente = skServidorTCP.accept();
                     System.out.println("Cliente conectado: " + skCliente.getInetAddress());
                     skClientes.add(skCliente);
@@ -70,6 +80,11 @@ public class Servidor {
         }
     }
 
+    /**
+     * Metodo que permite gestionar la escucha a clientes
+     *
+     * @param skCliente
+     */
     /**
      * Metodo que permite gestionar la escucha a clientes
      *
@@ -119,6 +134,10 @@ public class Servidor {
         } catch (IOException ex) {
         }
     }
+    
+    public void añadirCLiente(Cliente cliente){
+        clientes.add(cliente);
+    }
 
     public boolean clienteExiste(Cliente cliente) {
         boolean existe = false;
@@ -134,4 +153,30 @@ public class Servidor {
     public InetAddress getIp(){
         return ipServidor;
     }
+    
+    private InetAddress obtenerIpPrivada() {
+    try {
+        java.util.Enumeration<java.net.NetworkInterface> interfaces = java.net.NetworkInterface.getNetworkInterfaces();
+        while (interfaces.hasMoreElements()) {
+            java.net.NetworkInterface netInterface = interfaces.nextElement();
+            java.util.Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+            while (addresses.hasMoreElements()) {
+                InetAddress addr = addresses.nextElement();
+                if (!addr.isLoopbackAddress() && addr.isSiteLocalAddress()) {
+                    return addr;
+                }
+            }
+        }
+    } catch (Exception e) {
+        System.err.println("No se pudo obtener IP local: " + e.getMessage());
+    }
+    // Fallback a localhost si no se encuentra ninguna IP
+    try {
+        return InetAddress.getLocalHost();
+    } catch (Exception e) {
+        return null;
+    }
+}
+
+
 }

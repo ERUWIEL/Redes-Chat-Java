@@ -35,9 +35,11 @@ public class Pruebas extends JFrame {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        Cliente clt1 = new Cliente("El pepe", "Contraseña");
-        clt1.asignarServidor(InetAddress.getByName("192.168.100.8"), 56002, clt1);
-        //new Pruebas().setVisible(true);
+        int puerto = 5000;
+        Cliente clienteDummy = new Cliente("Admin", "1234");
+        Servidor servidor = new Servidor(puerto, clienteDummy);
+        
+        System.out.println("Servidor corriendo en IP: " + servidor.getIp().getHostAddress());
 
     }
 
