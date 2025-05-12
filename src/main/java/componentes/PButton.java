@@ -20,6 +20,8 @@ import javax.swing.JPanel;
  * como boton PButton!
  */
 public class PButton extends JPanel {
+    private Color colorIn;
+    private Color colorOut;
 
     /**
      * recibe la ruta del icono y opcionalmente del titulo del icono para mostrarse
@@ -60,9 +62,17 @@ public class PButton extends JPanel {
 
     }
 
-    public PButton(String etiqueta) {
+    public PButton(String etiqueta, Color entrada, Color salida) {
         super();
-        setBackground(new Color(33, 1, 46));
+        if (entrada == null || salida == null) {
+            colorOut = new Color(33, 1, 46);
+            colorIn = new Color(167, 11, 175);
+        }else{
+            colorIn = entrada;
+            colorOut = salida;
+        }
+
+        setBackground(colorOut);
         JLabel texto = new JLabel(etiqueta, JLabel.CENTER);
         texto.setFont(new Font("Calibri", Font.BOLD, 18));
         texto.setForeground(new Color(255, 255, 255));
@@ -71,15 +81,16 @@ public class PButton extends JPanel {
             @Override
             public void mouseEntered(MouseEvent e) {
                 setCursor(new Cursor(Cursor.HAND_CURSOR));
-                setBackground(new Color(167, 11, 175));
+                setBackground(colorIn);
                 texto.setForeground(new Color(0, 0, 0));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                setBackground(new Color(33, 1, 46));
+                setBackground(colorOut);
                 texto.setForeground(new Color(255, 255, 255));
             }
         });
     }
+
 }

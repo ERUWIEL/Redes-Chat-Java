@@ -47,9 +47,9 @@ public class PMenuCliente extends JPanel {
         txtPuerto.setBounds(350, 150, 230, 30);
 
         //boton de regresar
-        btnRegresar = new PButton("REGRESAR");
+        btnRegresar = new PButton("REGRESAR",null,null);
         btnRegresar.setBounds(150, 250, 200, 30);
-        btnUnirse = new PButton("UNIRSE");
+        btnUnirse = new PButton("UNIRSE", null, null);
         btnUnirse.setBounds(380, 250, 200, 30);
 
         //añadir los componentes al panel

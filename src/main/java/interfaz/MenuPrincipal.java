@@ -14,7 +14,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-//import java.util.Scanner;
+
+import componentes.JChat;
 import componentes.PButton;
 import componentes.PMenuCliente;
 import componentes.PMenuServidor;
@@ -54,7 +55,8 @@ public class MenuPrincipal extends JFrame {
         bob.decifrar(); // bob recibe el mensaje cifrado y decifra con la clave establecida
         System.out.println("Mensaje decifrado por Bob: " + bob.getMensaje());
         */
-        new MenuPrincipal().setVisible(true); 
+        //new MenuPrincipal().setVisible(true);
+        new JChat("Chat de prueba").setVisible(true);
     }
 
     /**

@@ -45,10 +45,10 @@ public class PMenuServidor extends JPanel {
         txtCapacidad.setFocusable(false);
         txtCapacidad.setBounds(350, 100, 130, 30);
         //boton de menos
-        btnMenos = new PButton("-");
+        btnMenos = new PButton("-",null,null);
         btnMenos.setBounds(480, 100, 50, 30);
         //boton de mas
-        btnMas = new PButton("+");
+        btnMas = new PButton("+", null, null);
         btnMas.setBounds(530, 100, 50, 30);
   
 
@@ -71,10 +71,10 @@ public class PMenuServidor extends JPanel {
         txtPuerto.setCampoNumerico();
         txtPuerto.setBounds(350, 200, 230, 30);
         
-        btnRegresar = new PButton("REGRESAR");
+        btnRegresar = new PButton("REGRESAR",null,null);
         btnRegresar.setBounds(150, 300, 200, 30);
         
-        btnCrear = new PButton("CREAR");
+        btnCrear = new PButton("CREAR",null,null);
         btnCrear.setBounds(380, 300, 200, 30);
 
         //añadir los componentes al panel
