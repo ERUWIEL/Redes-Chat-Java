@@ -1,30 +1,41 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package interfaz;
 
+import componentes.PButton;
+import componentes.PTextField;
+import entidades.Cliente;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import componentes.PButton;
-import componentes.PTextField;
-
-public class PanelDatos extends JPanel {
+/**
+ *
+ * @author xdlol
+ */
+public class PanelDatosCliente extends JPanel {
 
     private List<PTextField> datos = new LinkedList<>();
     private List<PButton> botones = new LinkedList<>();
     
-    private PTextField txtIP = new PTextField();
-    private PTextField txtPuerto = new PTextField();
+    private PTextField txtNombre = new PTextField();
+    private PTextField txtContraseña = new PTextField();
+    private Cliente cliente;
 
-    public PanelDatos(String titulo) {
+    public PanelDatosCliente(String titulo) {
         super(null);
         JPanel pnlOptiones = new JPanel() {
             @Override
@@ -48,20 +59,20 @@ public class PanelDatos extends JPanel {
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setBounds(250, 80, 250, 20);
 
-        JLabel lblIP = new JLabel("IP : ");
-        lblIP.setFont(new Font("Calibri", Font.BOLD, 19));
-        lblIP.setForeground(Color.WHITE);
-        lblIP.setBounds(200, 150, 100, 20);
+        JLabel lblNombre = new JLabel("Nombre: ");
+        lblNombre.setFont(new Font("Calibri", Font.BOLD, 19));
+        lblNombre.setForeground(Color.WHITE);
+        lblNombre.setBounds(200, 150, 100, 20);
         
-        txtIP.setBounds(250, 140, 250, 30);
+        txtNombre.setBounds(250, 140, 250, 30);
 
-        JLabel lblPuerto = new JLabel("PUERTO : ");
-        lblPuerto.setFont(new Font("Calibri", Font.BOLD, 19));
-        lblPuerto.setForeground(Color.WHITE);
-        lblPuerto.setBounds(200, 200, 100, 20);
+        JLabel lblContraseña = new JLabel("Contraseña: ");
+        lblContraseña.setFont(new Font("Calibri", Font.BOLD, 19));
+        lblContraseña.setForeground(Color.WHITE);
+        lblContraseña.setBounds(200, 200, 100, 20);
         
-        txtPuerto.setCampoNumerico();
-        txtPuerto.setBounds(290, 190, 210, 30);
+        txtContraseña.setCampoNumerico();
+        txtContraseña.setBounds(290, 190, 210, 30);
 
         // boton cancelar
         PButton btnCancelar = new PButton("cancelar");
@@ -74,39 +85,27 @@ public class PanelDatos extends JPanel {
         botones.add(btnAceptar);
 
         add(lblTitulo);
-        add(lblIP);
-        add(txtIP);
-        add(lblPuerto);
-        add(txtPuerto);
+        add(lblNombre);
+        add(txtNombre);
+        add(lblContraseña);
+        add(txtContraseña);
         add(btnCancelar);
         add(btnAceptar);
         add(pnlOptiones);
+        
+        botones.get(1).addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(datos == null){
+                    Cliente cliente = new Cliente(datos.get(0).toString(), datos.get(1).toString());
+                }
+            }
+        });
     }
     
-    public void agregarDatosServidor(){
-        datos.add(txtIP);
-        datos.add(txtPuerto);
+    public Cliente getCliente(){
+        return this.cliente;
     }
     
-    public void borrarDatos(){
-        txtIP.setText("");
-        txtPuerto.setText("");
-        datos.clear();
-    }
-
-    public String getDatoIp(){
-        return datos.get(0).getText();
-    }
-
-    public int getDatoPuerto(){
-        return Integer.parseInt(datos.get(1).getText());
-    }
-
-    public PButton getBotonAceptar(){
-        return botones.get(1);
-
-    }
-    public PButton getBotonCancelar(){
-        return botones.get(0);
-    }
+                    
 }

@@ -19,24 +19,26 @@ import java.awt.geom.RoundRectangle2D;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * clase que representa una ventana principal de un chat
- * 
+ *
  * @author erubiel
  */
 public class Pruebas extends JFrame {
+
     private String operacion;
-    
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        Cliente clt1 = new Cliente("El pepe", "Contraseña");
+        clt1.asignarServidor(InetAddress.getByName("192.168.100.8"), 56002, clt1);
         //new Pruebas().setVisible(true);
-        
-        Servidor servidor = new Servidor(56002);
-        
-        
+
     }
 
     /**
@@ -97,7 +99,6 @@ public class Pruebas extends JFrame {
         // panel de recoleccion de datos de creacion
         PanelDatos pnlDatos = new PanelDatos("Informacion Del Servidor");
 
-
         // MouseListener del boton cliente
         btnCliente.addMouseListener(new MouseAdapter() {
             @Override
@@ -126,11 +127,20 @@ public class Pruebas extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 operacion = null;
+                pnlDatos.borrarDatos();
                 remove(pnlDatos);
                 add(pnlCentral, BorderLayout.CENTER);
                 revalidate();
                 repaint();
             }
         });
+
+        pnlDatos.getBotonAceptar().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                
+            }
+        });
+
     }
 }

@@ -33,11 +33,11 @@ public class Servidor {
      * @param ipServidor
      * @param puerto
      */
-    public Servidor(InetAddress ipServidor, int puerto, Cliente cliente) {
+    public Servidor(int puerto, Cliente cliente) {
         try {
             
-            this.skServidorTCP = new ServerSocket(puerto);
-            this.ipServidor = ipServidor;
+            this.skServidorTCP = new ServerSocket(puerto, 50, InetAddress.getByName("0.0.0.0"));
+            this.ipServidor = InetAddress.getLocalHost();
 
             new Thread(() -> conectarClienteTCP(cliente)).start();
             //new Thread(() -> conectarClienteUDP()).start();
@@ -54,10 +54,9 @@ public class Servidor {
 
         try {
             System.out.println("Corriendo Servidor TCP");
-
+            cliente.asignarServidor(ipServidor, skServidorTCP.getLocalPort(), cliente);
             while (true) {
-                if (!clienteExiste(cliente)) {
-                    cliente.asignarServidor(ipServidor, skServidorTCP.getLocalPort(), cliente);
+                    
                     clientes.add(cliente);
                     Socket skCliente = skServidorTCP.accept();
                     System.out.println("Cliente conectado: " + skCliente.getInetAddress());
@@ -65,7 +64,6 @@ public class Servidor {
 
                     // crear un hilo dedicado a la gestion del usuario conectado
                     new Thread(() -> gestorCliente(skCliente)).start();
-                }
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "ERROR AL CONECTAR AL CLIENTE", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
