@@ -36,7 +36,7 @@ public class Pruebas extends JFrame {
      */
     public static void main(String[] args) throws IOException {
         int puerto =30002;
-        InetAddress direccionServidor = InetAddress.getByName("192.168.100.1");
+        InetAddress direccionServidor = InetAddress.getByName("192.168.56.1");
         Cliente clienteDummy = new Cliente("Admin", "1234");
         Servidor servidor = new Servidor(puerto);
         clienteDummy.asignarServidor(direccionServidor, puerto);
