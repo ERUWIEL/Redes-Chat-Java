@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridLayout;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -13,15 +15,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class JChat extends JFrame { 
+    // variables de instancia
     private String nombreChat;
     private String nombreAdmin;
 
-
+    //variables generales
     private JTextArea txtArea;
     private PButton btnEnviar;
     private PTextField txtMensaje;
     private JLabel lblAdmin;
     private JLabel lblNombreChat;
+
+    //vairbales de la interfaz
+    private JPanel pnlEste;
+
 
     public JChat(String nombreChat, String nombreAdmin) {
         this.nombreChat = nombreChat;
@@ -72,7 +79,7 @@ public class JChat extends JFrame {
         JLabel lblUsuarios = new JLabel("USUARIOS");
         lblUsuarios.setForeground(Color.WHITE);
         lblUsuarios.setFont(new Font("Oswald", Font.BOLD, 20));
-        lblUsuarios.setBounds(655, 10, 200, 30); // x, y, width, height
+        lblUsuarios.setBounds(640, 10, 200, 30); // x, y, width, height
         pnlNorte.add(lblUsuarios);
 
         //agregaciones de paneles
@@ -100,10 +107,11 @@ public class JChat extends JFrame {
 
     private void agregarPnlEste() {
         // configuracion del panel oeste
-        JPanel pnlOeste = new JPanel();
-        pnlOeste.setBackground(new Color(33, 1, 46));
-        pnlOeste.setPreferredSize(new Dimension(150, getHeight()));
-        add(pnlOeste, BorderLayout.EAST);
+        pnlEste = new JPanel();
+        pnlEste.setLayout(new GridLayout(10,1,10,10));
+        pnlEste.setBackground(new Color(33, 1, 46));
+        pnlEste.setPreferredSize(new Dimension(195, getHeight()));
+        add(pnlEste, BorderLayout.EAST);
     }
 
     private void agregarPnlSur(){
@@ -139,5 +147,51 @@ public class JChat extends JFrame {
     }
     public void setNewTitle(String title) {
         setTitle(title);
+    }
+
+    public void dibujaUsuario(String nombre){
+        // configuracion del panel este
+        JPanel pnlUsuario = new JPanel();
+        pnlUsuario.setBackground(new Color(84, 0, 81));
+        pnlUsuario.setLayout(null);
+
+        // configuracion del circulo de estado
+        JPanel ciruculo = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(new Color(0,200,0));
+                g.fillOval(0, 0, 10, 10);
+            }
+        };
+        ciruculo.setOpaque(false);
+        ciruculo.setBounds(10, 10, 25, 25); // x, y, width, height
+
+        // configuracion del label de usuario
+        JLabel lblUsuario = new JLabel(nombre);
+        lblUsuario.setForeground(Color.WHITE);
+        lblUsuario.setFont(new Font("Oswald", Font.BOLD, 16));
+        lblUsuario.setBounds(25, 0, 170, 30); // x, y, width, height
+        
+
+        //agregaciones de paneles
+        pnlUsuario.add(ciruculo);
+        pnlUsuario.add(lblUsuario);
+        pnlEste.add(pnlUsuario);
+        pnlEste.revalidate();
+        pnlEste.repaint();
+    }
+ 
+    public void eliminarUsuario(String nombre){
+        for (int i = 0; i < pnlEste.getComponentCount(); i++) {
+            JPanel panel = (JPanel) pnlEste.getComponent(i);
+            JLabel label = (JLabel) panel.getComponent(1);
+            if (label.getText().equals(nombre)) {
+                pnlEste.remove(panel);
+                break;
+            }
+        }
+        pnlEste.revalidate();
+        pnlEste.repaint();
     }
 }

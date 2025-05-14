@@ -11,9 +11,12 @@ import java.net.Socket;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JTextArea;
 
+import componentes.JChat;
 import componentes.PButton;
 import componentes.PTextField;
 
@@ -26,7 +29,7 @@ public class Servidor {
     //variables globales
     private ServerSocket socket;
     private static HashMap<ObjectOutputStream, Encriptador> encriptadores = new HashMap<>();
-    private static HashMap<String, InetAddress> clientes = new HashMap<>();
+    private static HashMap<String, ObjectOutputStream> clientes = new HashMap<>();
     private static LinkedList<String> historial = new LinkedList<>();
 
     // variables de instancia
@@ -37,6 +40,7 @@ public class Servidor {
     private String nombreAdmin;
 
     // componentes de la interfaz
+    private JChat pnlChat;
     private JTextArea chat;
     private PTextField texto;
     private PButton btnEnviar;
@@ -50,10 +54,15 @@ public class Servidor {
         this.capacidad = capacidad;
     }
 
-    public void asignarComponentes(JTextArea chat, PTextField texto, PButton btnEnviar) {
-        this.btnEnviar = btnEnviar;
-        this.chat = chat;
-        this.texto = texto;
+    /**
+     * metodo que permite dar control al servidor sobre sus componentres graficos
+     * @param pnlChat
+     */
+    public void asignarComponentes(JChat pnlChat) {
+        this.pnlChat = pnlChat;
+        this.btnEnviar = pnlChat.getBtnEnviar();
+        this.chat = pnlChat.getTxtArea();
+        this.texto = pnlChat.getTxtMensaje();
     }
 
     //metodos de coneccion principales
@@ -95,8 +104,9 @@ public class Servidor {
             
             Encriptador en = handshake(in, out); //determina una clave secreta de comunicacion
             String nombreCliente = validarDatos(en,in,out); //determina si el cliente es valido
-            clientes.put(nombreCliente, cliente.getInetAddress()); //agrega el cliente a la lista de clientes
-            new Thread(()-> manejaUsuario(en, in, nombreCliente)).start();; //asignar un hilo para el cliente
+            clientes.put(nombreCliente, out); //agrega el cliente a la lista de clientes
+            pnlChat.dibujaUsuario(nombreCliente);
+            new Thread(()-> manejaUsuario(en, cliente, in, out,nombreCliente)).start();; //asignar un hilo para el cliente
         }
     }
 
@@ -105,19 +115,49 @@ public class Servidor {
      * 
      * @param cliente
      */
-    private void manejaUsuario(Encriptador encriptador, ObjectInputStream in, String nombreCliente) {
+    private void manejaUsuario(Encriptador encriptador, Socket socket, ObjectInputStream in, ObjectOutputStream out, String nombreCliente) {
         try {
+            Pattern patronPriv = Pattern.compile("^/priv\\s+(\\w+)\\s+(.+)$");
+            Matcher matcherPriv;
             while (true) {
                 String mensaje = (String) in.readObject();  
                 if (mensaje instanceof String) {
                     encriptador.setMensaje(mensaje);
                     encriptador.decifrar();
-                    enviarMensaje(nombreCliente,encriptador.getMensaje());
+                    String mensajeDecifrado = encriptador.getMensaje();
+                    matcherPriv = patronPriv.matcher(mensajeDecifrado);
+                    
+                    if (mensajeDecifrado.equalsIgnoreCase("/salir")) { //si quiere salir se sale de una
+                        break;
+                    } else if (matcherPriv.matches()) { //evalua si quiere enviar un mensaje privado
+                        String destinatario = matcherPriv.group(1);
+                        String msjPriv = matcherPriv.group(2);
+                        enviarMensajePrivado(nombreCliente, destinatario, msjPriv);
+                    } else{
+                        enviarMensaje(nombreCliente,mensajeDecifrado);
+                    }
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Conexión cerrada o error al leer del socket.");
-            e.printStackTrace();
+            try {
+                socket.close();
+                pnlChat.eliminarUsuario(nombreCliente);
+                encriptadores.remove(out);
+                clientes.remove(nombreCliente);
+                enviarMensaje("SERVIDOR", "Cliente Ha Perdido La Conexion: " + nombreCliente);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } finally {
+            try {
+                socket.close();
+                pnlChat.eliminarUsuario(nombreCliente);
+                encriptadores.remove(out);
+                clientes.remove(nombreCliente);
+                enviarMensaje("SERVIDOR", "Cliente Se Ha Desconectado: " + nombreCliente);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -200,6 +240,28 @@ public class Servidor {
         });
         chat.append(msjFormateado + "\n");
         historial.add(msjFormateado);
+    }
+
+    /**
+     * metodo que permite asignar el nombre del servidor
+     * 
+     * @param nombreServidor
+     */
+    private void enviarMensajePrivado(String emisor, String destinatario, String mensaje) throws IOException {
+        String tiempo = String.format("%02d:%02d", Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE));
+        final String msjFormateado = "[" +tiempo + "][" + emisor + "]: " + mensaje;
+        clientes.forEach((nombre, out) -> {
+            if (nombre.equals(destinatario)) {
+                try {
+                    out.writeObject(msjFormateado);
+                    out.flush();
+                    out.reset();
+                } catch (IOException e) {
+                    System.out.println("Error al enviar el mensaje a " + nombre);
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**

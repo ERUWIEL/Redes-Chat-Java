@@ -157,7 +157,7 @@ public class PMenuServidor extends JPanel {
                 chat.setVisible(true);
                 try {
                     Servidor servidor = new Servidor(nombreServer, nombreAdmin, ip, puerto, capacidad);
-                    servidor.asignarComponentes(chat.getTxtArea(), chat.getTxtMensaje(), chat.getBtnEnviar());
+                    servidor.asignarComponentes(chat);
                     servidor.iniciarServidor();
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();

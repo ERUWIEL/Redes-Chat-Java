@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import componentes.JChat;
 import componentes.PButton;
 import componentes.PTextField;
 
@@ -40,12 +41,12 @@ public class Cliente {
         this.puertoServer = puertoServer;
     }
 
-    public void asignarComponentes(JTextArea chat, PTextField texto, PButton btnEnviar, JLabel lblAdmin, JLabel lblNombreChat) {
-        this.btnEnviar = btnEnviar;
-        this.chat = chat;
-        this.texto = texto;
-        this.lblAdmin = lblAdmin;
-        this.lblNombreChat = lblNombreChat;
+    public void asignarComponentes(JChat pnlChat) {
+        this.btnEnviar = pnlChat.getBtnEnviar();
+        this.chat = pnlChat.getTxtArea();
+        this.texto = pnlChat.getTxtMensaje();
+        this.lblAdmin = pnlChat.getLblAdmin();
+        this.lblNombreChat = pnlChat.getLblServer();
     }
 
     /**
@@ -60,7 +61,6 @@ public class Cliente {
         out.flush();
         in = new ObjectInputStream(socket.getInputStream());
         
-
         handshake();//establece una clave con el servidor
         new Thread(() -> {//recibe los mensajes del servidor en el hilo
             try {

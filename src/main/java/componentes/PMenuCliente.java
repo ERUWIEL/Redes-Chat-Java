@@ -86,7 +86,7 @@ public class PMenuCliente extends JPanel {
                 try {
                     JChat chat = new JChat("none","none");
                     Cliente cliente = new Cliente(nombreUsuario, ip, puerto);
-                    cliente.asignarComponentes(chat.getTxtArea(), chat.getTxtMensaje(), chat.getBtnEnviar(), chat.getLblAdmin(), chat.getLblServer());
+                    cliente.asignarComponentes(chat);
                     cliente.unirseServidor();
                     chat.setNewTitle(cliente.getNombreServidor());
                     chat.setVisible(true);
