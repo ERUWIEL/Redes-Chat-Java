@@ -2,15 +2,20 @@ package componentes;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import entidades.Cliente;
 
 public class PMenuCliente extends JPanel {
     private JPanel pnlPadre;
     private PButton btnUnirse;
     private PButton btnRegresar;
 
+    private ArrayList<PTextField> entradas = new ArrayList<>();
 
     public PMenuCliente(JPanel pnlPadre) {
         super(null);
@@ -61,6 +66,10 @@ public class PMenuCliente extends JPanel {
         add(txtPuerto);
         add(btnRegresar);
         add(btnUnirse);
+        //añadir los componentes a la lista
+        entradas.add(txtNomUsuario);
+        entradas.add(txtIp);
+        entradas.add(txtPuerto);
 
         runBtnUnirse();
         runBtnRegresar();
@@ -70,8 +79,19 @@ public class PMenuCliente extends JPanel {
         btnUnirse.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                // TODO add your handling code here:
-                System.out.println("Botón Unirse clickeado");
+                String nombreUsuario = entradas.get(0).getText();
+                String ip = entradas.get(1).getText();
+                int puerto = entradas.get(2).getInt();
+
+                try {
+                    Cliente cliente = new Cliente(nombreUsuario, ip, puerto);
+                    JChat chat = new JChat(cliente.getNombreServer());
+                    cliente.asignarComponentes(chat.getTxtArea(), chat.getTxtMensaje(), chat.getBtnEnviar());
+                    cliente.unirseServidor();
+                    chat.setVisible(true);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -85,4 +105,5 @@ public class PMenuCliente extends JPanel {
             }
         });
     }
+
 }

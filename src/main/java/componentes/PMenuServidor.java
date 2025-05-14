@@ -2,9 +2,13 @@ package componentes;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import entidades.Servidor;
 
 
 public class PMenuServidor extends JPanel {
@@ -13,6 +17,8 @@ public class PMenuServidor extends JPanel {
     private PButton btnMenos;
     private PButton btnCrear;
     private PButton btnRegresar;
+
+    private ArrayList<PTextField> entradas = new ArrayList<>();
     private PTextField txtCapacidad;
     private int capacidad = 0;
     private JPanel pnlPadre;
@@ -91,6 +97,12 @@ public class PMenuServidor extends JPanel {
         add(btnRegresar);
         add(btnCrear);
 
+        //añadir los componentes a la lista
+        entradas.add(txtNomServer);
+        entradas.add(txtCapacidad);
+        entradas.add(txtIp);
+        entradas.add(txtPuerto);
+        
         //añadir eventos a los botones
         runBtnMas();
         runBtnMenos();
@@ -124,8 +136,19 @@ public class PMenuServidor extends JPanel {
         btnCrear.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                // TODO add your handling code here:
-                System.out.println("Botón Crear clickeado");
+                String nombre = entradas.get(0).getText();
+                String ip = entradas.get(2).getText();
+                int puerto = entradas.get(3).getInt();
+                
+                JChat chat = new JChat(nombre);
+                chat.setVisible(true);
+                try {
+                    Servidor servidor = new Servidor(nombre, "ERWBYEL", ip, puerto, capacidad);
+                    servidor.asignarComponentes(chat.getTxtArea(), chat.getTxtMensaje(), chat.getBtnEnviar());
+                    servidor.iniciarServidor();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

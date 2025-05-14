@@ -12,8 +12,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class JChat extends JFrame {
+public class JChat extends JFrame { 
     private String nombreChat;
+    private JTextArea txtArea;
+    private PButton btnEnviar;
+    private PTextField txtMensaje;
 
     public JChat(String nombreChat) {
         this.nombreChat = nombreChat;
@@ -76,7 +79,7 @@ public class JChat extends JFrame {
         pnlCentro.setLayout(null);
         pnlCentro.setBackground(new Color(84, 0, 81));
 
-        JTextArea txtArea = new JTextArea();
+        txtArea = new JTextArea();
         txtArea.setBackground(new Color(46,2,48));
         txtArea.setEditable(false);
         txtArea.setFocusable(false);
@@ -103,9 +106,9 @@ public class JChat extends JFrame {
         pnlSur.setBackground(new Color(33, 1, 46));
         pnlSur.setPreferredSize(new Dimension(getWidth(), 80));
 
-        PTextField txtMensaje = new PTextField();
+        txtMensaje = new PTextField();
         txtMensaje.setBounds(40, 20, 450, 40);
-        PButton btnEnviar = new PButton("ENVIAR",Color.WHITE,new Color(6,79,146));
+        btnEnviar = new PButton("ENVIAR",Color.WHITE,new Color(6,79,146));
         btnEnviar.setBounds(490, 22, 100, 36);
 
         pnlSur.add(txtMensaje);
@@ -113,4 +116,13 @@ public class JChat extends JFrame {
         add(pnlSur, BorderLayout.SOUTH);
     }
 
+    public PTextField getTxtMensaje() {
+        return txtMensaje;
+    }
+    public PButton getBtnEnviar() {
+        return btnEnviar;
+    }
+    public JTextArea getTxtArea() {
+        return txtArea;
+    }
 }

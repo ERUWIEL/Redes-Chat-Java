@@ -5,8 +5,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 
-//import entidades.Cliente;
-//import entidades.Servidor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,11 +13,9 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import componentes.JChat;
 import componentes.PButton;
 import componentes.PMenuCliente;
 import componentes.PMenuServidor;
-//import entidades.Encriptador;
 
 import java.io.IOException;
 
@@ -39,38 +35,10 @@ public class MenuPrincipal extends JFrame {
 
     /**
      * @param args the command line arguments
+     * @throws ClassNotFoundException 
      */
-    public static void main(String[] args) throws IOException{
-        /*
-        Encriptador alice = new Encriptador(); //alice manda P, G y A
-        Encriptador bob = new Encriptador(alice.getParam()); //bob recibe P, G y A
-        alice.finalizar(bob.getParam()); //alice recibe B
-        System.out.println("Claves Compartidas");
-        System.out.println("Clave: " + alice.s());
-        alice.setMensaje("HOLA BOB COMO ESTAS ESTE ES MI MENSAJE ENCRIPTADO 123456789@#$%$&$#$");
-        alice.cifrar();
-        String mensaje = alice.getMensaje(); //alice manda el mensaje cifrado
-        System.out.println("Mensaje Recibido por Bob: " + mensaje);
-        bob.setMensaje(mensaje);
-        bob.decifrar(); // bob recibe el mensaje cifrado y decifra con la clave establecida
-        System.out.println("Mensaje decifrado por Bob: " + bob.getMensaje());
-        */
+    public static void main(String[] args) throws IOException, ClassNotFoundException{
         new MenuPrincipal().setVisible(true);
-        //new JChat("Chat de prueba").setVisible(true);
-        /**
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("1. Crear Servidor\n2. Unirse a Servidor");
-        int opt = scanner.nextInt();
-
-        if(opt == 1){
-            new Servidor(5000);
-        }else{
-            System.out.println("INGRESE LA IP DEL SERVIDOR");
-            Cliente cliente = new Cliente("angel", "123456");
-            String ip = scanner.next();
-            cliente.asignarServidor(InetAddress.getByName(ip),5000);
-        }
-        */
     }
 
     /**
