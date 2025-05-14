@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
@@ -19,7 +20,6 @@ import componentes.PTextField;
  */
 public class Cliente {
     // variables de instancia
-    private String nombreServer;
     private String nombre;
     private InetAddress ipServer;
     private int puertoServer;
@@ -31,6 +31,8 @@ public class Cliente {
     private JTextArea chat;
     private PTextField texto;
     private PButton btnEnviar;
+    private JLabel lblAdmin;
+    private JLabel lblNombreChat;
 
     public Cliente(String nombre, String ipServer, int puertoServer) throws IOException, ClassNotFoundException {
         this.nombre = nombre;
@@ -38,10 +40,12 @@ public class Cliente {
         this.puertoServer = puertoServer;
     }
 
-    public void asignarComponentes(JTextArea chat, PTextField texto, PButton btnEnviar) {
+    public void asignarComponentes(JTextArea chat, PTextField texto, PButton btnEnviar, JLabel lblAdmin, JLabel lblNombreChat) {
         this.btnEnviar = btnEnviar;
         this.chat = chat;
         this.texto = texto;
+        this.lblAdmin = lblAdmin;
+        this.lblNombreChat = lblNombreChat;
     }
 
     /**
@@ -115,14 +119,19 @@ public class Cliente {
         out.flush();
         out.reset();
 
-        String mensaje = (String) in.readObject();// recibe la informacion basica del servidor encriptada
+        String mensaje = (String) in.readObject();// recibe el nombre del chat del servidor encriptado
         encriptador.setMensaje(mensaje);
         encriptador.decifrar();
-        this.nombreServer = encriptador.getMensaje();
+        lblNombreChat.setText(encriptador.getMensaje());
+
+        mensaje = (String) in.readObject();// recibe el nombre del admin del servidor encriptada
+        encriptador.setMensaje(mensaje);
+        encriptador.decifrar();
+        lblAdmin.setText(encriptador.getMensaje());
     }
 
-    public String getNombreServer() {
-        return nombreServer;
+    public String getNombreServidor(){
+        return lblNombreChat.getText();
     }
 
     /**

@@ -93,11 +93,8 @@ public class Servidor {
             out.flush();
             ObjectInputStream in = new ObjectInputStream(cliente.getInputStream()); //wrapper ingreso
             
-
             Encriptador en = handshake(in, out); //determina una clave secreta de comunicacion
-            System.out.println("handshake realizado");
             String nombreCliente = validarDatos(en,in,out); //determina si el cliente es valido
-            System.out.println("Cliente valido");
             clientes.put(nombreCliente, cliente.getInetAddress()); //agrega el cliente a la lista de clientes
             new Thread(()-> manejaUsuario(en, in, nombreCliente)).start();; //asignar un hilo para el cliente
         }
@@ -111,13 +108,10 @@ public class Servidor {
     private void manejaUsuario(Encriptador encriptador, ObjectInputStream in, String nombreCliente) {
         try {
             while (true) {
-                System.out.println("Esperando mensaje de " + nombreCliente);
                 String mensaje = (String) in.readObject();  
-                System.out.println("Mensaje recibido: " + mensaje);
                 if (mensaje instanceof String) {
                     encriptador.setMensaje(mensaje);
                     encriptador.decifrar();
-                    System.out.println("Mensaje desencriptado: " + encriptador.getMensaje());
                     enviarMensaje(nombreCliente,encriptador.getMensaje());
                 }
             }
@@ -158,6 +152,12 @@ public class Servidor {
         } else {
             encriptadores.put(out, encriptador);//agrega el cliente a la lista de clientes    
             encriptador.setMensaje(nombreServidor);// manda el nombre del servidor de manera segura una vez aceptado
+            encriptador.cifrar();
+            out.writeObject(encriptador.getMensaje());
+            out.flush();
+            out.reset();
+
+            encriptador.setMensaje(nombreAdmin);// manda el nombre del admin de manera segura una vez aceptado
             encriptador.cifrar();
             out.writeObject(encriptador.getMensaje());
             out.flush();

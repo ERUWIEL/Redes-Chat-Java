@@ -84,10 +84,11 @@ public class PMenuCliente extends JPanel {
                 int puerto = entradas.get(2).getInt();
 
                 try {
+                    JChat chat = new JChat("none","none");
                     Cliente cliente = new Cliente(nombreUsuario, ip, puerto);
-                    JChat chat = new JChat(cliente.getNombreServer());
-                    cliente.asignarComponentes(chat.getTxtArea(), chat.getTxtMensaje(), chat.getBtnEnviar());
+                    cliente.asignarComponentes(chat.getTxtArea(), chat.getTxtMensaje(), chat.getBtnEnviar(), chat.getLblAdmin(), chat.getLblServer());
                     cliente.unirseServidor();
+                    chat.setNewTitle(cliente.getNombreServidor());
                     chat.setVisible(true);
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();

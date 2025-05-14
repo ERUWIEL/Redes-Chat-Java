@@ -14,13 +14,19 @@ import javax.swing.JTextArea;
 
 public class JChat extends JFrame { 
     private String nombreChat;
+    private String nombreAdmin;
+
+
     private JTextArea txtArea;
     private PButton btnEnviar;
     private PTextField txtMensaje;
+    private JLabel lblAdmin;
+    private JLabel lblNombreChat;
 
-    public JChat(String nombreChat) {
+    public JChat(String nombreChat, String nombreAdmin) {
         this.nombreChat = nombreChat;
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.nombreAdmin = nombreAdmin;
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setResizable(false);
         setTitle(nombreChat);
@@ -39,7 +45,7 @@ public class JChat extends JFrame {
         pnlNorte.setBackground(new Color(33, 1, 46));
         pnlNorte.setPreferredSize(new Dimension(getWidth(), 50));
 
-        JLabel lblNombreChat = new JLabel(nombreChat);
+        lblNombreChat = new JLabel(nombreChat);
         lblNombreChat.setForeground(Color.WHITE);
         lblNombreChat.setFont(new Font("Oswald", Font.BOLD, 20));
         lblNombreChat.setBounds(40, 10, 200, 30); // x, y, width, height
@@ -56,7 +62,7 @@ public class JChat extends JFrame {
 
         JPanel pnlAdmin = new JPanel();
         pnlAdmin.setBackground(new Color(137,0,127));
-        JLabel lblAdmin = new JLabel("ERWBYEL");
+        lblAdmin = new JLabel(nombreAdmin);
         lblAdmin.setForeground(Color.WHITE);
         lblAdmin.setFont(new Font("Oswald", Font.BOLD, 16));
         pnlAdmin.add(lblAdmin);
@@ -124,5 +130,14 @@ public class JChat extends JFrame {
     }
     public JTextArea getTxtArea() {
         return txtArea;
+    }
+    public JLabel getLblServer() {
+        return lblNombreChat;
+    }
+    public JLabel getLblAdmin() {
+        return lblAdmin;
+    }
+    public void setNewTitle(String title) {
+        setTitle(title);
     }
 }

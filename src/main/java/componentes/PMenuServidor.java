@@ -76,10 +76,19 @@ public class PMenuServidor extends JPanel {
         PTextField txtPuerto = new PTextField();
         txtPuerto.setCampoNumerico();
         txtPuerto.setBounds(350, 200, 230, 30);
+
+        JLabel lblNombre = new JLabel("Nombre De Administrador");
+        lblNombre.setForeground(Color.WHITE);
+        lblNombre.setFont(font);
+        lblNombre.setBounds(150, 250, 200, 30);
+        //JTextField de puerto
+        PTextField txtNombre = new PTextField();
+        txtNombre.setBounds(350, 250, 230, 30);
         
+
+
         btnRegresar = new PButton("REGRESAR",null,null);
         btnRegresar.setBounds(150, 300, 200, 30);
-        
         btnCrear = new PButton("CREAR",null,null);
         btnCrear.setBounds(380, 300, 200, 30);
 
@@ -94,6 +103,8 @@ public class PMenuServidor extends JPanel {
         add(txtIp);
         add(lblPuerto);
         add(txtPuerto);
+        add(lblNombre);
+        add(txtNombre);
         add(btnRegresar);
         add(btnCrear);
 
@@ -102,6 +113,7 @@ public class PMenuServidor extends JPanel {
         entradas.add(txtCapacidad);
         entradas.add(txtIp);
         entradas.add(txtPuerto);
+        entradas.add(txtNombre);
         
         //añadir eventos a los botones
         runBtnMas();
@@ -136,14 +148,15 @@ public class PMenuServidor extends JPanel {
         btnCrear.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                String nombre = entradas.get(0).getText();
+                String nombreServer = entradas.get(0).getText();
                 String ip = entradas.get(2).getText();
                 int puerto = entradas.get(3).getInt();
+                String nombreAdmin = entradas.get(4).getText();
                 
-                JChat chat = new JChat(nombre);
+                JChat chat = new JChat(nombreServer, nombreAdmin);
                 chat.setVisible(true);
                 try {
-                    Servidor servidor = new Servidor(nombre, "ERWBYEL", ip, puerto, capacidad);
+                    Servidor servidor = new Servidor(nombreServer, nombreAdmin, ip, puerto, capacidad);
                     servidor.asignarComponentes(chat.getTxtArea(), chat.getTxtMensaje(), chat.getBtnEnviar());
                     servidor.iniciarServidor();
                 } catch (IOException | ClassNotFoundException e) {
