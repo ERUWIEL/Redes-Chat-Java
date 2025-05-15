@@ -123,18 +123,20 @@ public class Servidor {
                 String mensaje = (String) in.readObject();  
                 if (mensaje instanceof String) {
                     encriptador.setMensaje(mensaje);
-                    encriptador.decifrar();
-                    String mensajeDecifrado = encriptador.getMensaje();
-                    matcherPriv = patronPriv.matcher(mensajeDecifrado);
+                    //encriptador.decifrar();
+                    //String mensajeDecifrado = encriptador.getMensaje();
+                    matcherPriv = patronPriv.matcher(mensaje);
                     
-                    if (mensajeDecifrado.equalsIgnoreCase("/salir")) { //si quiere salir se sale de una
+                    if (mensaje.equalsIgnoreCase("/salir")) { //si quiere salir se sale de una
                         break;
                     } else if (matcherPriv.matches()) { //evalua si quiere enviar un mensaje privado
                         String destinatario = matcherPriv.group(1);
+                        System.out.println(destinatario);
                         String msjPriv = matcherPriv.group(2);
+                        System.out.println(msjPriv);
                         enviarMensajePrivado(nombreCliente, destinatario, msjPriv);
                     } else{
-                        enviarMensaje(nombreCliente,mensajeDecifrado);
+                        enviarMensaje(nombreCliente,mensaje);
                     }
                 }
             }
@@ -190,9 +192,9 @@ public class Servidor {
         if(nombreCliente == nombreAdmin || nombreCliente =="SERVIDOR" || clientes.containsKey(nombreCliente)){
             throw new IOException("Nombre de usuario no valido");
         } else {
-            encriptadores.put(out, encriptador);//agrega el cliente a la lista de clientes    
-            encriptador.setMensaje(nombreServidor);// manda el nombre del servidor de manera segura una vez aceptado
-            encriptador.cifrar();
+            //encriptadores.put(out, encriptador);//agrega el cliente a la lista de clientes    
+            //encriptador.setMensaje(nombreServidor);// manda el nombre del servidor de manera segura una vez aceptado
+            //encriptador.cifrar();
             out.writeObject(encriptador.getMensaje());
             out.flush();
             out.reset();
@@ -205,8 +207,8 @@ public class Servidor {
 
             // manda el historial de mensajes al cliente
             for(String m : historial){
-                encriptador.setMensaje(m);
-                encriptador.cifrar();
+                //encriptador.setMensaje(m);
+                //encriptador.cifrar();
                 out.writeObject(encriptador.getMensaje());
                 out.flush();
                 out.reset();
@@ -228,8 +230,8 @@ public class Servidor {
 
         encriptadores.forEach((out, encriptador)->{
             try {
-                encriptador.setMensaje(msjFormateado);
-                encriptador.cifrar();
+                //encriptador.setMensaje(msjFormateado);
+                //encriptador.cifrar();
                 out.writeObject(encriptador.getMensaje());
                 out.flush();
                 out.reset();
@@ -251,8 +253,10 @@ public class Servidor {
         String tiempo = String.format("%02d:%02d", Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE));
         final String msjFormateado = "[" +tiempo + "][" + emisor + "]: " + mensaje;
         clientes.forEach((nombre, out) -> {
+            System.out.println("Entró al metodo enviarMensajePrivado");
             if (nombre.equals(destinatario)) {
                 try {
+                    System.out.println("Entro al if");
                     out.writeObject(msjFormateado);
                     out.flush();
                     out.reset();
